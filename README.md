@@ -5,4 +5,5 @@ Written in Rust by Robert Beier.
 ## Performance measurements
 
 |day|part one|part two|
+|---|---|---|
 |01|5μs||
