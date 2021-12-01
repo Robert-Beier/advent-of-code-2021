@@ -1,7 +1,12 @@
 pub fn count_number_of_increments(steps: &Vec<u32>) -> usize {
-    steps.into_iter().enumerate().filter(|(index, value)| {
-        *index != 0 && *value > steps.get(index - 1).expect("Previous step not found.")
-    }).count()
+    let error_message = "Step not found in window";
+    steps
+        .windows(2)
+        .into_iter()
+        .filter(|window_steps| {
+            window_steps.get(1).expect(error_message) > window_steps.get(0).expect(error_message)
+        })
+        .count()
 }
 
 #[cfg(test)]
