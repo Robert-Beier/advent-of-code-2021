@@ -147,3 +147,62 @@ mod tests_execute_commands {
         assert_eq!(execute_commands(&commands), Point { x: 15, y: 10 });
     }
 }
+
+pub fn execute_commands_using_aim(commands: &Vec<Command>) -> Point {
+    let mut position = Point { x: 0, y: 0 };
+    let mut aim: u32 = 0;
+
+    commands.into_iter().for_each(|command| {
+        match command.direction {
+            Direction::FORWARD => {
+                position.x += command.steps;
+                position.y += command.steps * aim;
+            }
+            Direction::DOWN => aim += command.steps,
+            // we are relying only on the rust debug mode to check underflow here
+            Direction::UP => aim -= command.steps,
+        };
+    });
+
+    position
+}
+
+#[cfg(test)]
+mod tests_execute_commands_using_aim {
+    use crate::{execute_commands_using_aim, Command, Direction, Point};
+
+    #[test]
+    fn should_work_for_example_one() {
+        let commands = vec![
+            Command {
+                direction: Direction::FORWARD,
+                steps: 5,
+            },
+            Command {
+                direction: Direction::DOWN,
+                steps: 5,
+            },
+            Command {
+                direction: Direction::FORWARD,
+                steps: 8,
+            },
+            Command {
+                direction: Direction::UP,
+                steps: 3,
+            },
+            Command {
+                direction: Direction::DOWN,
+                steps: 8,
+            },
+            Command {
+                direction: Direction::FORWARD,
+                steps: 2,
+            },
+        ];
+
+        assert_eq!(
+            execute_commands_using_aim(&commands),
+            Point { x: 15, y: 60 }
+        );
+    }
+}
